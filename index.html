@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Form</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: white;
+            font-family: 'MesloLGS NF', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .terminal {
+            background-color: black;
+            padding: 20px;
+            width: 400px;
+        }
+
+        .prompt-input-container {
+            display: flex;
+            align-items: baseline;
+        }
+
+        .prompt-input {
+            background-color: transparent;
+            border: none;
+            padding: 10px;
+            color: white;
+            font-size: 16px;
+            width: 100%;
+            outline: none;
+            caret-color: white;
+            transition: opacity 0.5s ease-in-out, border 1.0s ease;
+            transition: background-color 0.5s ease;
+            border-radius: 25px; /* Rounded corners */
+        }
+        .prompt-input:hover {
+            background-color: #333;
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        /* Bold rectangular cursor */
+        .prompt-input:focus {
+            border: 2px solid white;
+        }
+
+        #previousEntries {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        /* Add margin to create line spacing between previous entries */
+        .previous-entry {
+            margin: 5px 0; /* Adjust the margin for spacing */
+            padding: 0;
+            line-height: 1.5;
+        }
+
+        .prompt-text {
+            white-space: nowrap;
+            margin-right: 10px;
+        }
+
+        /* Adjust the prompt style to prevent line breaks */
+        .prompt-text, #promptText {
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Set initial opacity to 1 for prompt text */
+        .prompt-text {
+            opacity: 1;
+        }
+
+        .show-prompt .prompt-text {
+            opacity: 1;
+        }
+
+        /* Style for the enter button */
+        .enter-button {
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.5s ease;
+            font-size: 18px;
+        }
+
+        .enter-button:hover {
+            background-color: #333;
+        }
+
+        /* Arrow icon CSS */
+        .arrow-icon::before {
+            content: '\2192';
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="terminal">
+    <div id="previousEntries"></div>
+    <div class="prompt-input-container">
+        <div class="prompt-text" id="promptText">Enter your Name:</div>
+        <input type="text" id="nameInput" class="prompt-input">
+        <!-- Arrow button -->
+        <button id="enterButton" class="enter-button arrow-icon"></button>
+    </div>
+</div>
+
+<script>
+    const terminal = document.querySelector('.terminal');
+    const prompts = [
+        "Enter your Roll Number:",
+        "Enter your Email:",
+        "Enter your Branch:",
+        "Enter your Section:"
+    ];
+    let currentPromptIndex = -1;
+
+    const promptText = document.getElementById('promptText');
+    const nameInput = document.getElementById('nameInput');
+    const previousEntriesDiv = document.getElementById('previousEntries');
+    const previousEntries = [];
+    const enterButton = document.getElementById('enterButton');
+
+    // Function to handle input submission
+    function handleInputSubmission() {
+        const value = nameInput.value.trim();
+        if (value !== '') {
+            previousEntries.push(value);
+            currentPromptIndex++;
+            if (currentPromptIndex < prompts.length) {
+                nameInput.value = '';
+                promptText.textContent = prompts[currentPromptIndex];
+                // Create a paragraph element for previous entries with line spacing
+                const previousEntryParagraph = document.createElement('p');
+                previousEntryParagraph.className = 'previous-entry';
+                previousEntryParagraph.textContent = value;
+                previousEntriesDiv.appendChild(previousEntryParagraph);
+            } else {
+                console.log('All entries:', previousEntries);
+            }
+        }
+    }
+
+    // Handle input submission when the button is clicked
+    enterButton.addEventListener('click', handleInputSubmission);
+
+    // Handle input submission when Enter key is pressed
+    nameInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleInputSubmission();
+        }
+    });
+</script>
+</body>
+</html>
